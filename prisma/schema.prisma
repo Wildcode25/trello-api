@@ -1,0 +1,62 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  name     String
+  email    String  @unique
+  password String
+  Collaborator Collaborator[]
+  workspace Workspace[]
+}
+
+model Board {
+  id          Int           @id @default(autoincrement())
+  name        String
+  workspaceId Int
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  collaborators Collaborator[]
+  lists       List[]
+}
+model Workspace {
+  id       Int     @id @default(autoincrement())
+  name     String
+  owner    User    @relation(fields: [ownerId], references: [id])
+  ownerId  String
+  boards   Board[]
+}
+model Collaborator {
+  id      Int     @id @default(autoincrement())
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boardId Int
+  board   Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  admin   Boolean
+  lists   List[]
+  cards   Card[]
+}
+model List {
+  id         Int          @id @default(autoincrement())
+  name       String
+  createdById Int?
+  createdBy Collaborator? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  boardId    Int
+  board      Board        @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards      Card[]
+}
+model Card {
+  id         Int          @id @default(autoincrement())
+  name       String
+  createdById Int?
+  createdBy Collaborator? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  listId     Int
+  list       List         @relation(fields: [listId], references: [id], onDelete: Cascade)
+}
+
