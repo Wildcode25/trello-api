@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,29 +8,33 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  name     String
-  email    String  @unique
-  password String
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  password     String
   Collaborator Collaborator[]
-  workspace Workspace[]
+  workspace    Workspace[]
 }
 
 model Board {
-  id          Int           @id @default(autoincrement())
-  name        String
-  workspaceId Int
-  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  id            Int            @id @default(autoincrement())
+  name          String
+  ownerId       String
+  workspaceName String
+  color         String
+  workspace     Workspace      @relation(fields: [ownerId, workspaceName], references: [ownerId, name], onDelete: Cascade)
   collaborators Collaborator[]
-  lists       List[]
+  lists         List[]
 }
+
 model Workspace {
-  id       Int     @id @default(autoincrement())
-  name     String
-  owner    User    @relation(fields: [ownerId], references: [id])
-  ownerId  String
-  boards   Board[]
+  name    String
+  owner   User    @relation(fields: [ownerId], references: [id])
+  ownerId String
+  boards  Board[]
+  @@id([ownerId, name])
 }
+
 model Collaborator {
   id      Int     @id @default(autoincrement())
   userId  String
@@ -42,21 +45,23 @@ model Collaborator {
   lists   List[]
   cards   Card[]
 }
+
 model List {
-  id         Int          @id @default(autoincrement())
-  name       String
+  id          Int           @id @default(autoincrement())
+  name        String
   createdById Int?
-  createdBy Collaborator? @relation(fields: [createdById], references: [id], onDelete: SetNull)
-  boardId    Int
-  board      Board        @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  cards      Card[]
-}
-model Card {
-  id         Int          @id @default(autoincrement())
-  name       String
-  createdById Int?
-  createdBy Collaborator? @relation(fields: [createdById], references: [id], onDelete: SetNull)
-  listId     Int
-  list       List         @relation(fields: [listId], references: [id], onDelete: Cascade)
+  createdBy   Collaborator? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  boardId     Int
+  board       Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards       Card[]
+  color       String
 }
 
+model Card {
+  id          Int           @id @default(autoincrement())
+  name        String
+  createdById Int?
+  createdBy   Collaborator? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  listId      Int
+  list        List          @relation(fields: [listId], references: [id], onDelete: Cascade)
+}

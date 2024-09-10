@@ -7,6 +7,9 @@ export class UserController {
   constructor(UserModel) {
     this.UserModel = UserModel;
   }
+  getUser = (req, res)=>{
+    res.json(res.session.user)
+  } 
   loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -23,7 +26,7 @@ export class UserController {
         process.env.SECRET_KEY
         , {expiresIn: '1h'})
 
-      res.cookie('access-token',
+      res.cookie('access_token',
         token,
         {
           httpOnly: true,
@@ -36,16 +39,16 @@ export class UserController {
   };
   registerUser = async (req, res) => {
     try {
-      const result = validateData(userLoginSchema, req.body);
+      const result = validateData({Schema: userRegistrationSchema, input: req.body});
       if (!result.success) res.status(400).json({ error: result.error });
 
-      const gettedUser = await this.UserModel.getUser({ email: data.email });
+      const gettedUser = await this.UserModel.getUser({ email: result.data.email });
       if (gettedUser)
         return res.status(400).json({ error: "User already exist" });
 
-      const hashedPassword = await bcrypt.hash(data.password, 10);
-      data.password = hashedPassword;
-      const createdUser = await this.UserModel.createUser({ data });
+      const hashedPassword = await bcrypt.hash(result.data.password, 10);
+      result.data.password = hashedPassword;
+      const createdUser = await this.UserModel.createUser({ data: result.data });
       res.json(createdUser);
     } catch (e) {
       console.error(`Error creating user: ${e.message}`);
