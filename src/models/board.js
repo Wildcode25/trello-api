@@ -22,12 +22,21 @@ export class BoardModel{
                         include: {
                             cards: true
                         }
-                    }
+                    },
+                    collaborators: true
                 }
             })
             return gettedBoards
         }catch(e){
             console.log(`Error getting boards: ${e.message}`)
+        }
+    }
+    static async deleteBoard({id}){
+        try{
+            const deletedBoard = await prisma.board.delete({where: {id}})
+            return deletedBoard
+        }catch(e){
+
         }
     }
 }

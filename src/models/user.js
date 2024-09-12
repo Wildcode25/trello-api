@@ -9,7 +9,8 @@ export class UserModel {
           email,
         },
         include: {
-          workspace: true 
+          workspaces: true,
+          Collaborators: true 
         }
       });
       return user;

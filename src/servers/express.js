@@ -10,14 +10,24 @@ import { WorkspaceModel } from '../models/workspace.js'
 import { verifyAuthorization } from '../middlewares/verifyAuthorization.js'
 import { createBoardRouter } from '../routes/board.js'
 import { BoardModel } from '../models/board.js'
+import { createListRouter } from '../routes/list.js'
+import { createCardRouter } from '../routes/card.js'
+import { CardModel } from '../models/card.js'
+import { ListModel } from '../models/list.js'
+import { errorHandler } from '../middlewares/errorHandler.js'
 const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
+ 
 
-app.use('/', verifyToken)
 app.use('/', createUserRouter(UserModel))
-app.use('/workspace',verifyAuthorization, createWorkspaceRouter(WorkspaceModel))
-app.use('/board',verifyAuthorization, createBoardRouter(BoardModel))
+app.use('/', verifyToken)
+app.use('/workspace', createWorkspaceRouter(WorkspaceModel))
+app.use('/board', createBoardRouter(BoardModel))
+app.use('/list', createListRouter(ListModel))
+app.use('/card', createCardRouter(CardModel))
+app.use('/', errorHandler)
+
 
 export default app

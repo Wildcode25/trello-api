@@ -12,8 +12,8 @@ model User {
   name         String
   email        String         @unique
   password     String
-  Collaborator Collaborator[]
-  workspace    Workspace[]
+  Collaborators Collaborator[]
+  workspaces    Workspace[]
 }
 
 model Board {
@@ -32,6 +32,7 @@ model Workspace {
   owner   User    @relation(fields: [ownerId], references: [id])
   ownerId String
   boards  Board[]
+
   @@id([ownerId, name])
 }
 
@@ -64,4 +65,5 @@ model Card {
   createdBy   Collaborator? @relation(fields: [createdById], references: [id], onDelete: SetNull)
   listId      Int
   list        List          @relation(fields: [listId], references: [id], onDelete: Cascade)
+  done        Boolean
 }

@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { CustomizedError } from '../utils/errors.js'
 export const verifyToken = async (req,res,next)=>{
     res.session = {user: null}
     const token = req.cookies.access_token
@@ -9,6 +10,6 @@ export const verifyToken = async (req,res,next)=>{
         }
         next()
     }catch(e){
-        console.log(`error verifying token: ${e}`)
+        next(new CustomizedError({message: 'Session expired', code:401}))
     }
 }
