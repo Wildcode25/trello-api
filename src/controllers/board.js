@@ -22,7 +22,7 @@ export class BoardController {
       ...req.body,
       ownerId,
     });
-    res.json(createdBoard);
+    res.json({data: createdBoard, message: 'Board created successfulty', error: false});
   };
   getBoards = async (req, res) => {
     const { workspaceName } = req.params;
@@ -33,11 +33,12 @@ export class BoardController {
     });
     if (!gettedBoards)
       throw new CustomizedError({ message: "Boards not found", code: 404 });
-    res.json(gettedBoards);
+    res.json({data: gettedBoards, message: null, error: false});
   };
   deleteBoard = async (req, res) => {
     const id = parseInt(req.params.id);
     const deletedBoard = await this.BoardModel.deleteBoard({ id });
-    res.json(deletedBoard);
+    if(!deletedBoard) throw new CustomizedError({message: 'Board not found', code:404})
+    res.json({data: deletedBoard, message: 'Board deleted successfuly', error: false});
   };
 }

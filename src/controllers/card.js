@@ -12,7 +12,7 @@ export class CardController {
     const createdCard = await this.CardModel.createCard({
       data: { name, listId, color, createdById, done },
     });
-    res.json(createdCard);
+    res.json({data: createdCard, message: 'Card created successfuly', error: false});
   };
   updateCard = async (req, res) => {
     const { id } = req.params;
@@ -20,11 +20,11 @@ export class CardController {
       id,
       data: req.body,
     });
-    res.json(updatedList);
+    res.json({data: updatedList, message: 'Card updated successfuly', error: false});
   };
   deleteCard = async (req, res) => {
     const { id } = req.params;
     const deletedList = await this.ListModel.deleteList({ id });
-    res.json(deletedList);
+    res.json({data: deletedList, message: 'Card deleted successfuly', error: false});
   };
 }

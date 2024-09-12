@@ -10,16 +10,15 @@ export class UserController {
     this.UserModel = UserModel;
   }
   getUser = (req, res) => {
-   
     if(!req.session) throw new CustomizedError({message: 'Please login', code: 401})
-    res.json(user);
+    const {user} = req.session  
+    res.json({data: user});
   };
   loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     const result = validateData({ Schema: userLoginSchema, input: req.body });
     if (!result.success)
-      console.log('here')
       throw new CustomizedError({
         message: "Validation error",
         code: 400,
@@ -45,7 +44,7 @@ export class UserController {
         httpOnly: true,
         sameSite: "strict",
       })
-      .json({ gettedUser, token });
+      .json({ data: gettedUser });
   };
 
   registerUser = async (req, res) => {
@@ -69,7 +68,7 @@ export class UserController {
     const hashedPassword = await bcrypt.hash(result.data.password, 10);
     result.data.password = hashedPassword;
     const createdUser = await this.UserModel.createUser({ data: result.data });
-    res.json(createdUser);
+    res.json({data: createdUser});
   };
 
   logoutUser = (req, res) => {
