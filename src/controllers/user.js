@@ -38,13 +38,13 @@ export class UserController {
     const token = jwt.sign(gettedUser, process.env.SECRET_KEY, {
       expiresIn: "1h",
     });
-
+    const {password: _, ...user}=gettedUser
     res
       .cookie("access_token", token, {
         httpOnly: true,
         sameSite: "strict",
       })
-      .json({ data: gettedUser });
+      .json({ data: user, message: 'You have logged successfuly', error: false });
   };
 
   registerUser = async (req, res) => {
@@ -68,7 +68,7 @@ export class UserController {
     const hashedPassword = await bcrypt.hash(result.data.password, 10);
     result.data.password = hashedPassword;
     const createdUser = await this.UserModel.createUser({ data: result.data });
-    res.json({data: createdUser});
+    res.json({data: {password: _, ...createdUser}, message: 'User created successfuly'});
   };
 
   logoutUser = (req, res) => {
