@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style type="text/tailwindcss">
+      @layer components {
+        .userManagementForm{
+          @apply w-[400px] min-h-screen flex items-center pt-8 flex-col gap-4;
+        }
+        .inputForm{
+          @apply px-2 w-80 rounded-sm h-[40px] border border-gray-400 focus:outline-blue-600;
+        }
+        .submit{
+          @apply text-white bg-blue-600 w-80 h-[40px] rounded-sm hover:bg-blue-800 
+        }
+        .anchor{
+          @apply text-sm text-blue-600 hover:underline
+        }
+        .errorInput{
+          @apply border-spacing-3 border-red-600 text-red-600 focus:outline-red-600
+        }
+      }
+      
+    </style>
+    <title>Trello-clon</title>
+    <script type="module" crossorigin src="/assets/index-BbvPDYwL.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMpgGIX7.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

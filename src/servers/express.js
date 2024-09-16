@@ -15,18 +15,21 @@ import { createCardRouter } from '../routes/card.js'
 import { CardModel } from '../models/card.js'
 import { ListModel } from '../models/list.js'
 import { errorHandler } from '../middlewares/errorHandler.js'
+import path from 'node:path'
 const app = express()
-
+const baseRoute = path.join(process.cwd(), 'dist')
 app.use(express.json())
 app.use(cookieParser())
- 
-
-app.use('/', createUserRouter(UserModel))
-app.use('/', verifyToken)
-app.use('/workspace', createWorkspaceRouter(WorkspaceModel))
-app.use('/board', createBoardRouter(BoardModel))
-app.use('/list', createListRouter(ListModel))
-app.use('/card', createCardRouter(CardModel))
+app.use(express.static('dist')) 
+app.use('/', (req, res)=>{
+    res.sendFile(baseRoute,'index.html')
+})
+app.use('/api', createUserRouter(UserModel))
+app.use('/api', verifyToken)
+app.use('/api/workspace', createWorkspaceRouter(WorkspaceModel))
+app.use('/api/board', createBoardRouter(BoardModel))
+app.use('/api/list', createListRouter(ListModel))
+app.use('/api/card', createCardRouter(CardModel))
 app.use('/', errorHandler)
 
 
