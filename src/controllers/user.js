@@ -4,6 +4,7 @@ import { userLoginSchema } from "../schemas/loginUser.js";
 import { userRegistrationSchema } from "../schemas/registerUser.js";
 import jwt from "jsonwebtoken";
 import { CustomizedError } from "../utils/errors.js";
+import { generateValidationErrorsDetails } from "../utils/generateValidationErrorDetails.js";
 
 export class UserController {
   constructor(UserModel) {
@@ -18,12 +19,15 @@ export class UserController {
     const { email, password } = req.body;
 
     const result = validateData({ Schema: userLoginSchema, input: req.body });
-    if (!result.success)
+    if (!result.success){
+      const errorDetails = generateValidationErrorsDetails({errors: result.error.issues})
       throw new CustomizedError({
         message: "Validation error",
         code: 400,
-        data: result.error.issues,
+        data: errorDetails,
       });
+    }
+      
 
     const gettedUser = await this.UserModel.getUser({ email });
     if (!gettedUser)
@@ -52,23 +56,23 @@ export class UserController {
       Schema: userRegistrationSchema,
       input: req.body,
     });
-    if (!result.success)
+    if (!result.success){
+      const errorDetails = generateValidationErrorsDetails({errors: result.error.issues})
       throw new CustomizedError({
         message: "Validation Error",
         code: 400,
-        data: result.error.issues,
+        data: errorDetails,
       });
-
+    }
     const gettedUser = await this.UserModel.getUser({
       email: result.data.email,
     });
     if (gettedUser)
       throw new CustomizedError({ message: "User already exists", code: 400 });
-
     const hashedPassword = await bcrypt.hash(result.data.password, 10);
     result.data.password = hashedPassword;
-    const createdUser = await this.UserModel.createUser({ data: result.data });
-    res.json({data: {password: _, ...createdUser}, message: 'User created successfuly'});
+    await this.UserModel.createUser({data: result.data})
+    res.json({ message: 'User created successfuly', error: false});
   };
 
   logoutUser = (req, res) => {
