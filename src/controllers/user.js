@@ -11,9 +11,9 @@ export class UserController {
     this.UserModel = UserModel;
   }
   getUser = (req, res) => {
-    if(!req.session) throw new CustomizedError({message: 'Please login', code: 401})
-    const {user} = req.session  
-    res.json({data: user});
+    if(!res.session) throw new CustomizedError({message: 'Please login', code: 401})
+    const {user} = res.session  
+    res.json({data: user, message: 'welcome', error:false});
   };
   loginUser = async (req, res) => {
     const { email, password } = req.body;
