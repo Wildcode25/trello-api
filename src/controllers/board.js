@@ -1,4 +1,3 @@
-import { json } from "express";
 import { boardSchema } from "../schemas/board.js";
 import { validateData } from "../schemas/validateData.js";
 import { CustomizedError } from "../utils/errors.js";
@@ -10,7 +9,8 @@ export class BoardController {
   createBoard = async (req, res) => {
     const ownerId = res.session.user.id;
     const result = validateData({ Schema: boardSchema, input: req.body });
-    console.log(result.error.issues);
+    console.log("klk")
+    
     if (!result.success) {
       throw new CustomizedError({
         message: "Validation Error",
@@ -18,6 +18,7 @@ export class BoardController {
         data: result.error.issues,
       });
     }
+    console.log("klk")
     const createdBoard = await this.BoardModel.createBoard({
       ...req.body,
       ownerId,

@@ -1,17 +1,16 @@
 import { PrismaClient } from "@prisma/client";
-import { CustomizedError } from "../utils/errors.js";
 import { validateData } from "../schemas/validateData.js";
+import { CustomizedError } from "../utils/errors.js";
 const prisma = new PrismaClient()
 export class ListModel{
 
     static async createList({data}) {
         try{
-            const result = validateData({Schema: boardSchema, input: req.body})
-            if(!result.success)  throw new CustomizedError({message: result.error.message, code: 400}) 
+            console.log('here')
             const createdList = await prisma.list.create({data})
             return createdList
         }catch(e){
-            console.error(`Error creatting list: ${e.message}`)
+            throw new CustomizedError({message: e.message})
         }
     }
     static async deleteList({id}){

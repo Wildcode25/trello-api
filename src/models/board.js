@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { CustomizedError } from "../utils/errors.js";
 const prisma = new PrismaClient()
 export class BoardModel{
     static async createBoard(data){
@@ -6,7 +7,7 @@ export class BoardModel{
             const createdBoard = prisma.board.create({data})
             return createdBoard
         }catch(e){
-            console.error(`Error creating Board in db :${e.message}`)
+            throw new CustomizedError({message: e.message, code: 500})
         }
     }
 
@@ -23,7 +24,7 @@ export class BoardModel{
                             cards: true
                         }
                     },
-                    collaborators: true
+                    
                 }
             })
             return gettedBoards

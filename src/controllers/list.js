@@ -1,3 +1,4 @@
+import { listSchema } from "../schemas/list.js";
 import { validateData } from "../schemas/validateData.js";
 import { CustomizedError } from "../utils/errors.js";
 export class ListController {
@@ -5,10 +6,15 @@ export class ListController {
     this.ListModel = ListModel;
   }
   createList = async (req, res) => {
-    const { name, boardId, color, createdById = null } = req.body;
+    const { name, boardId, createdById = null } = req.body;
+    const result = validateData({Schema: listSchema, input: req.body})
+    if(!result.success) throw new CustomizedError({message: "Validation Error", code: 400})
+       
     const createdList = await this.ListModel.createList({
-      data: { name, boardId, color, createdById },
+
+      data: { name, boardId, createdById },
     });
+
     res.json({data: createdList, message: 'List created successfuly', error: false
     });
   };
@@ -20,7 +26,7 @@ export class ListController {
     res.json({data: updatedList, message: 'List updated successfuly', error: false});
   };
   deleteList = async (req, res) => {
-    const { id } = req.params;
+    const  id  = parseInt(req.params.id);
 
     const deletedList = await this.ListModel.deleteList({ id });
     if(!deletedList) throw new CustomizedError({message: "List not found", code: 404})
