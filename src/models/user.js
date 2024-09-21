@@ -21,13 +21,19 @@ export class UserModel {
   static async createUser({ data }) {
     const {name, email, password}=data
     try {
-      const createdUser = prisma.user.create({
+      const createdUser = await prisma.user.create({
         data:{
             name,
             email,
             password
         }
       });
+      await prisma.workspace.create({
+        data:{
+          name: `Espacio de trabajo de ${name}`,
+          ownerId: createdUser.id
+        }
+      })
       return createdUser;
     } catch (e) {
       console.error(`Error creating user in databse: ${e.message}`);
