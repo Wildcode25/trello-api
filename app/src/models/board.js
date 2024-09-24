@@ -4,7 +4,16 @@ const prisma = new PrismaClient()
 export class BoardModel{
     static async createBoard(data){
         try{
-            const createdBoard = prisma.board.create({data})
+            const createdBoard = prisma.board.create({data,
+                include: {
+                    lists: {
+                        include: {
+                            cards: true
+                        }
+                    },
+                    
+                }
+            })
             return createdBoard
         }catch(e){
             throw new CustomizedError({message: e.message, code: 500})
@@ -12,11 +21,12 @@ export class BoardModel{
     }
 
     static async getBoards({workspaceName, ownerId}){
+        console.log(ownerId, workspaceName)
         try{
             const gettedBoards = await prisma.board.findMany({
                 where: {
-                    workspaceName,
                     ownerId
+                    
                 },
                 include: {
                     lists: {
@@ -27,6 +37,7 @@ export class BoardModel{
                     
                 }
             })
+            console.log(gettedBoards)
             return gettedBoards
         }catch(e){
             console.log(`Error getting boards: ${e.message}`)

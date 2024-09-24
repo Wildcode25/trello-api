@@ -9,16 +9,14 @@ export class BoardController {
   createBoard = async (req, res) => {
     const ownerId = res.session.user.id;
     const result = validateData({ Schema: boardSchema, input: req.body });
-    console.log("klk")
-    
     if (!result.success) {
+      console.log(result.error.issues)
       throw new CustomizedError({
         message: "Validation Error",
         code: 400,
         data: result.error.issues,
       });
     }
-    console.log("klk")
     const createdBoard = await this.BoardModel.createBoard({
       ...req.body,
       ownerId,
@@ -27,11 +25,13 @@ export class BoardController {
   };
   getBoards = async (req, res) => {
     const { workspaceName } = req.params;
+    console.log(workspaceName)
     const ownerId = res.session.user.id;
     const gettedBoards = await this.BoardModel.getBoards({
       workspaceName,
       ownerId,
     });
+    console.log(gettedBoards)
     if (!gettedBoards)
       throw new CustomizedError({ message: "Boards not found", code: 404 });
     res.json({data: gettedBoards, message: null, error: false});

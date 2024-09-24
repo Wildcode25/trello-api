@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { validateData } from "../schemas/validateData.js";
 import { CustomizedError } from "../utils/errors.js";
 const prisma = new PrismaClient()
 export class ListModel{

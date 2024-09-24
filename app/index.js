@@ -1,4 +1,4 @@
-import app from './servers/express.js'
+import app from './src/servers/express.js'
 import {createServer} from 'http'
 
 const server = createServer(app)
