@@ -24,8 +24,8 @@ export class CardController {
     res.json({data: updatedList, message: 'Card updated successfuly', error: false});
   };
   deleteCard = async (req, res) => {
-    const { id } = req.params;
-    const deletedList = await this.ListModel.deleteList({ id });
-    res.json({data: deletedList, message: 'Card deleted successfuly', error: false});
+    const  id  = parseInt(req.params.id);
+    const deletedCard = await this.CardModel.deleteCard({ id });
+    res.json({data: deletedCard, message: 'Card deleted successfuly', error: false});
   };
 }
