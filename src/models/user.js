@@ -34,6 +34,7 @@ export class UserModel {
           ownerId: createdUser.id
         }
       })
+      console.log(createdUser)
       return createdUser;
     } catch (e) {
       console.error(`Error creating user in databse: ${e.message}`);
