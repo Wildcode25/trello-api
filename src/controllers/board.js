@@ -10,7 +10,6 @@ export class BoardController {
     const ownerId = res.session.user.id;
     const result = validateData({ Schema: boardSchema, input: req.body });
     if (!result.success) {
-      console.log(result.error.issues)
       throw new CustomizedError({
         message: "Validation Error",
         code: 400,
@@ -25,7 +24,6 @@ export class BoardController {
   };
   getBoards = async (req, res) => {
     const { workspaceName } = req.params;
-    console.log(workspaceName)
     const ownerId = res.session.user.id;
     const gettedBoards = await this.BoardModel.getBoards({
       workspaceName,

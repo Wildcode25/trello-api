@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { CustomizedError } from "../utils/errors.js";
 const prisma = new PrismaClient();
 export class CardModel {
   static async createCard({ data }) {
@@ -6,7 +7,8 @@ export class CardModel {
       const createdCard = await prisma.card.create({ data });
       return createdCard;
     } catch (e) {
-      console.error(`Error creatting list: ${e.message}`);
+      console.log(e.message)
+     throw new CustomizedError({message: e.message, code:500})
     }
   }
   static async deleteCard({ id }) {
