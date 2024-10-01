@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user.js";
 import { craeteCatchedFunction } from "../utils/createCatchedfunction.js";
-
 export function createUserRouter(UserModel){
     const userRouter = Router()
     const userController = new UserController(UserModel)

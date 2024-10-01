@@ -2,6 +2,18 @@ import { PrismaClient } from "@prisma/client";
 import { CustomizedError } from "../utils/errors.js";
 const prisma = new PrismaClient();
 export class CardModel {
+  static async getCards(listId){
+    try{
+      const cards = await prisma.card.findMany({
+        where: {
+          listId: listId
+        }
+      })
+      return cards
+    }catch(e){
+      throw new CustomizedError({message: 'error getting cards in db', code:500})
+    }
+  }
   static async createCard({ data }) {
     try {
       const createdCard = await prisma.card.create({ data });

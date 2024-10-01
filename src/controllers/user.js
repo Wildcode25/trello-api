@@ -5,7 +5,6 @@ import { userRegistrationSchema } from "../schemas/registerUser.js";
 import jwt from "jsonwebtoken";
 import { CustomizedError } from "../utils/errors.js";
 import { generateValidationErrorsDetails } from "../utils/generateValidationErrorDetails.js";
-
 export class UserController {
   constructor(UserModel) {
     this.UserModel = UserModel;

@@ -5,6 +5,14 @@ export class CardController {
   constructor(CardModel) {
     this.CardModel = CardModel;
   }
+  getCards = async (req, res)=>{
+    const listId = parseInt(req.params.listId)
+    if(!listId) throw new CustomizedError({message: "Invalid id", code: 400})
+    const cards = await this.CardModel.getCards(listId)  
+    if(cards===undefined) throw new CustomizedError({message: 'Error unkhow getting cards', code: 500})
+      res.json({data: cards, message: "", error: false})
+  }
+
   createCard = async (req, res) => {
     const { name, listId, createdById = null, done = false } = req.body;
     const result = validateData({ Schema: CardSchema, input: req.body });

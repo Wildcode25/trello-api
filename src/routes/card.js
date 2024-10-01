@@ -5,7 +5,7 @@ import { craeteCatchedFunction } from "../utils/createCatchedfunction.js"
 export const createCardRouter = (CardModel)=>{
     const cardRouter = Router()
     const cardController = new CardController(CardModel)
-
+    cardRouter.get('/:listId', craeteCatchedFunction(cardController.getCards))
     cardRouter.post('/', craeteCatchedFunction(cardController.createCard))
     cardRouter.put('/:id', craeteCatchedFunction(cardController.updateCard))
     cardRouter.delete('/:id', craeteCatchedFunction(cardController.deleteCard))
