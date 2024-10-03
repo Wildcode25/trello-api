@@ -45,7 +45,8 @@ export class CardModel {
       });
       return updateCard;
     } catch (e) {
-      console.error(`Error updating list in  db: ${e.message}`);
+      console.error(e.message)
+      throw new CustomizedError({message: e.message, code: 500})
     }
   }
 }

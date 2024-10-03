@@ -24,12 +24,20 @@ export class CardController {
     res.json({data: createdCard, message: 'Card created successfuly', error: false});
   };
   updateCard = async (req, res) => {
-    const { id } = req.params;
-    const updatedList = await this.ListModel.updateList({
-      id,
-      data: req.body,
-    });
-    res.json({data: updatedList, message: 'Card updated successfuly', error: false});
+    const  id  = parseInt(req.params.id);
+    const {name, listId} = req.body 
+    if(!id) throw new CustomizedError({message: 'Invalid id', code: 400})
+      
+      console.log(id, listId)
+      try{
+        const updatedCard = await this.CardModel.updateCard({
+          id,
+          data: {listId, name},
+        });
+      res.json({data: updatedCard, message: 'Card updated successfuly', error: false});
+      }catch(e){
+        console.error(e.message)
+      }
   };
   deleteCard = async (req, res) => {
     const  id  = parseInt(req.params.id);
